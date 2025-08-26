@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text to PowerPoint Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .form-container {
+      padding: 40px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e1e5e9;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .file-upload {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .file-upload input[type=file] {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-upload-label {
+      display: block;
+      padding: 12px 16px;
+      background: #f8f9fa;
+      border: 2px dashed #dee2e6;
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .file-upload:hover .file-upload-label {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-top: 20px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      display: none;
+    }
+
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .status.loading {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .form-container {
+        padding: 30px;
+      }
+    }
+
+    .filename-display {
+      margin-top: 8px;
+      color: #667eea;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>✨ Text to PowerPoint</h1>
+      <p>Transform your text into beautiful presentations</p>
+    </div>
+
+    <div class="form-container">
+      <form id="pptForm">
+        <div class="form-group">
+          <label for="textInput">Your Text Content:</label>
+          <textarea 
+            id="textInput" 
+            name="textInput" 
+            placeholder="Paste your text, markdown, or prose here. This will be automatically converted into slide content..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="guidance">Guidance (Optional):</label>
+          <input 
+            type="text" 
+            id="guidance" 
+            name="guidance" 
+            placeholder="e.g., 'turn into an investor pitch deck', 'make it technical', 'focus on key points'"
+          />
+        </div>
+
+        <div class="row">
+          <div class="form-group">
+            <label for="llmProvider">LLM Provider:</label>
+            <select id="llmProvider" name="llmProvider" required>
+              <option value="">Select Provider</option>
+              <option value="openai">OpenAI (GPT)</option>
+              <option value="anthropic">Anthropic (Claude)</option>
+              <option value="gemini">Google (Gemini)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="apiKey">Your API Key:</label>
+            <input 
+              type="password" 
+              id="apiKey" 
+              name="apiKey" 
+              placeholder="Your LLM API key (not stored)"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="templateFile">PowerPoint Template (Optional):</label>
+          <div class="file-upload">
+            <input type="file" id="templateFile" name="templateFile" accept=".pptx,.potx">
+            <label for="templateFile" class="file-upload-label">
+              <span id="fileLabel">📎 Choose template file (.pptx or .potx)</span>
+            </label>
+          </div>
+          <div id="fileNameDisplay" class="filename-display"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="filename">Output Filename:</label>
+          <input 
+            type="text" 
+            id="filename" 
+            name="filename" 
+            placeholder="my-presentation"
+            required
+          />
+        </div>
+
+        <button type="submit" class="submit-btn">🚀 Generate Presentation</button>
+      </form>
+
+      <div id="status" class="status"></div>
+    </div>
+  </div>
+
+  <script>
+    // File upload handling
+    document.getElementById('templateFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const fileLabel = document.getElementById('fileLabel');
+      const fileNameDisplay = document.getElementById('fileNameDisplay');
+      
+      if (file) {
+        fileLabel.textContent = `✅ ${file.name}`;
+        fileNameDisplay.textContent = `Selected: ${file.name}`;
+      } else {
+        fileLabel.textContent = '📎 Choose template file (.pptx or .potx)';
+        fileNameDisplay.textContent = '';
+      }
+    });
+
+    // Form submission
+    document.getElementById("pptForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData();
+      const textInput = document.getElementById("textInput").value;
+      const guidance = document.getElementById("guidance").value;
+      const llmProvider = document.getElementById("llmProvider").value;
+      const apiKey = document.getElementById("apiKey").value;
+      const templateFile = document.getElementById("templateFile").files[0];
+      const filename = document.getElementById("filename").value;
+
+      // Prepare form data
+      formData.append('text_content', textInput);
+      formData.append('guidance', guidance);
+      formData.append('llm_provider', llmProvider);
+      formData.append('api_key', apiKey);
+      formData.append('filename', filename);
+      
+      if (templateFile) {
+        formData.append('template_file', templateFile);
+      }
+
+      const statusDiv = document.getElementById("status");
+      const submitBtn = document.querySelector('.submit-btn');
+      
+      // Show loading state
+      statusDiv.className = "status loading";
+      statusDiv.style.display = "block";
+      statusDiv.textContent = "🔄 Generating your presentation...";
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Generating...";
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/generate-ppt", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || "Error generating presentation");
+        }
+
+        // Download the file
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${filename}.pptx`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+        // Show success
+        statusDiv.className = "status success";
+        statusDiv.textContent = "✅ Download complete! Check your downloads folder.";
+        
+      } catch (err) {
+        statusDiv.className = "status error";
+        statusDiv.textContent = `❌ Error: ${err.message}`;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "🚀 Generate Presentation";
+      }
+    });
+  </script>
+</body>
+</html>
