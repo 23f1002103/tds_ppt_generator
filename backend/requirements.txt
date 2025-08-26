@@ -5,3 +5,8 @@ pydantic
 python-dotenv
 requests
 google-generativeai
+anthropic==0.28.0
+# ... other libraries ...
+python-pptx==0.6.23
+uvicorn==0.30.1
+python-multipart
