@@ -3,5 +3,7 @@ uvicorn
 python-pptx
 pydantic
 python-dotenv
-requests
 google-generativeai
+openai
+anthropic
+python-multipart
