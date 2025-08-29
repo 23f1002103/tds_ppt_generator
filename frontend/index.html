@@ -329,7 +329,7 @@
       submitBtn.textContent = "Generating...";
 
       try {
-        const response = await fetch("https://ppt-generator-api.onrender.com/generate-ppt", {
+        const response = await fetch("http://127.0.0.1:8000/generate-ppt", {
           method: "POST",
           body: formData,
         });
