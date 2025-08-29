@@ -5,46 +5,36 @@ from pptx.enum.shapes import PP_PLACEHOLDER
 
 def create_ppt_from_template(slide_data, output_path, template_path=None):
     """
-    Creates a NEW, separate PPT file from slide_data, applying styles from a template,
-    without including the original template's content slides.
+    Creates a NEW, separate PPT file from slide_data, applying styles from a template.
+    This version opens the template, deletes its slides, then adds new ones.
     """
     
-    # --- THIS IS THE CORRECTED LOGIC ---
-    
-    # Step 1: Create a new, blank presentation object.
-    prs = Presentation()
-
-    # Step 2: If a template is provided, copy its slide masters to the new presentation.
-    # The slide masters contain all the styling, fonts, colors, and layouts.
+    # If a template is provided, open it. Otherwise, create a blank presentation.
     if template_path:
-        template_prs = Presentation(template_path)
+        prs = Presentation(template_path)
         
-        # Copy slide masters from template to the new presentation
-        for master in template_prs.slide_masters:
-            # This is a way to duplicate the master slide layout
-            new_master = prs.slide_masters.add_slide_master(
-                master.slide_layout.name, 
-                master.slide_layout.prs, 
-                master.slide_layout._element
-            )
-            # This part is a bit of a workaround to ensure the theme (colors/fonts) is copied.
-            # It's not perfect but works for most standard templates.
-            for shape in master.shapes:
-                new_shape = new_master.shapes.add_shape(
-                    shape.auto_shape_type, 
-                    shape.left, shape.top, shape.width, shape.height
-                )
+        # --- THIS IS THE CORRECTED LOGIC ---
+        # Get the list-like object of slide IDs
+        slide_id_list = prs.slides._sldIdLst
+        
+        # Create a list of all slide elements to remove, as we can't iterate and remove from the same list
+        slides_to_remove = list(slide_id_list)
+        
+        # Iterate through the list of slide elements and remove each one
+        for slide_element in slides_to_remove:
+            slide_id_list.remove(slide_element)
+        # --- END OF CORRECTED LOGIC ---
 
-    # --- END OF CORRECTED LOGIC ---
+    else:
+        prs = Presentation()
 
-    # Find a suitable "Title and Content" layout from the new presentation's masters
+    # Find a suitable "Title and Content" layout
     title_and_content_layout = None
-    
-    # A common index for "Title and Content" is 1. We try this first.
     try:
+        # Most templates have "Title and Content" at index 1
         title_and_content_layout = prs.slide_layouts[1]
     except IndexError:
-        # If that fails, search for it programmatically
+        # Fallback to searching for a suitable layout if index 1 doesn't exist
         for layout in prs.slide_layouts:
             has_title = any(ph.placeholder_format.type == PP_PLACEHOLDER.TITLE for ph in layout.placeholders)
             has_body = any(ph.placeholder_format.type in (PP_PLACEHOLDER.BODY, PP_PLACEHOLDER.OBJECT) for ph in layout.placeholders)
@@ -52,11 +42,11 @@ def create_ppt_from_template(slide_data, output_path, template_path=None):
                 title_and_content_layout = layout
                 break
     
-    # If still not found, use the first available layout as a last resort
+    # If no suitable layout is found, use the first one as a last resort
     if not title_and_content_layout and len(prs.slide_layouts) > 0:
         title_and_content_layout = prs.slide_layouts[0]
     else:
-        # If there are no layouts at all (e.g., no template provided), use the default
+        # If there are no layouts at all (e.g., truly blank presentation), use the default
         title_and_content_layout = prs.slide_layouts.get_by_name("Title and Content") or prs.slide_layouts[1]
 
 
@@ -72,9 +62,10 @@ def create_ppt_from_template(slide_data, output_path, template_path=None):
 
         # Find the body placeholder on the slide
         for shape in slide.placeholders:
-            if shape.placeholder_format.type != PP_PLACEHOLDER.TITLE:
-                body_shape = shape
-                break
+            if shape.placeholder_format.type in (PP_PLACEHOLDER.BODY, PP_PLACEHOLDER.OBJECT, PP_PLACEHOLDER.CONTENT):
+                if shape.has_text_frame:
+                    body_shape = shape
+                    break
         
         if body_shape:
             tf = body_shape.text_frame
@@ -88,7 +79,7 @@ def create_ppt_from_template(slide_data, output_path, template_path=None):
                 for point_text in points[1:]:
                     p = tf.add_paragraph()
                     p.text = point_text
-                    p.level = 0
+                    p.level = 0 # Ensure all points are at the top level
 
     prs.save(output_path)
     return output_path
