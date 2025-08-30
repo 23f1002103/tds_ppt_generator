@@ -11,7 +11,8 @@ import sys
 import json
 
 # Add the backend directory to Python path to import core modules
-backend_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Change the sys.path line to:
+backend_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'backend')
 sys.path.append(backend_path)
 
 try:
