@@ -10,12 +10,20 @@ from typing import Optional
 import sys
 import json
 
-# Add the parent directory to the Python path so we can import core modules
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add the backend directory to Python path to import core modules
+backend_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(backend_path)
 
-from core.llm_handler import generate_slide_content
-from core.generator import create_ppt_from_template
-
+try:
+    from core.llm_handler import generate_slide_content
+    from core.generator import create_ppt_from_template
+except ImportError as e:
+    print(f"Import error: {e}")
+    print(f"Backend path: {backend_path}")
+    print(f"Current working directory: {os.getcwd()}")
+    print(f"Python path: {sys.path}")
+    # Don't raise here, let it fail at runtime so we can see the error
+    
 app = FastAPI(title="Text to PowerPoint Generator")
 
 app.add_middleware(
@@ -35,7 +43,6 @@ async def generate_ppt(
     filename: str = Form(...),
     template_file: Optional[UploadFile] = File(None)
 ):
-    # Create a temporary directory
     temp_dir = tempfile.mkdtemp()
     
     try:
@@ -83,13 +90,11 @@ async def generate_ppt(
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the PowerPoint Generator API! This endpoint is working."}
+    return {"message": "Welcome to the PowerPoint Generator API! This endpoint is working on Vercel."}
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthy", "platform": "vercel"}
 
-# This is important for Vercel
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# Export the app for Vercel - this is what Vercel will use
+app = app
