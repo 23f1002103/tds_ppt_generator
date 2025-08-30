@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PresentAI - Transform Text to Presentations</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <title>Text to PowerPoint Generator</title>
   <style>
     * {
       margin: 0;
@@ -12,169 +11,53 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --primary-bg: #0a0a0a;
-      --secondary-bg: #1a1a1a;
-      --card-bg: rgba(255, 255, 255, 0.05);
-      --accent: #6366f1;
-      --accent-hover: #4f46e5;
-      --text-primary: #ffffff;
-      --text-secondary: #a1a1aa;
-      --border: rgba(255, 255, 255, 0.1);
-      --success: #10b981;
-      --error: #ef4444;
-      --warning: #f59e0b;
-    }
-
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--primary-bg);
-      color: var(--text-primary);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Animated background */
-    .bg-animation {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
-      animation: float 6s ease-in-out infinite;
-      z-index: -1;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(1deg); }
+      padding: 20px;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 2rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Header */
-    .header {
-      text-align: center;
-      margin-bottom: 3rem;
-      padding: 2rem 0;
-    }
-
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .logo-icon {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      background: white;
       border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      color: white;
-      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
-    }
-
-    .header h1 {
-      font-size: 3.5rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ffffff, #a1a1aa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 1rem;
-      letter-spacing: -0.02em;
-    }
-
-    .header p {
-      font-size: 1.25rem;
-      color: var(--text-secondary);
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    /* Main form */
-    .form-grid {
-      display: grid;
-      gap: 2rem;
-      grid-template-columns: 1fr;
-    }
-
-    .form-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 2.5rem;
-      transition: all 0.3s ease;
-      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
 
-    .form-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0.5;
-    }
-
-    .form-card:hover {
-      border-color: rgba(99, 102, 241, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    .card-title {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .card-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .header {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
       color: white;
-      font-size: 14px;
+      padding: 30px;
+      text-align: center;
     }
 
-    /* Form elements */
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .form-container {
+      padding: 40px;
+    }
+
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 25px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--text-primary);
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
       font-size: 0.95rem;
     }
 
@@ -182,47 +65,32 @@
     .form-group textarea,
     .form-group select {
       width: 100%;
-      padding: 1rem 1.25rem;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      border-radius: 12px;
+      padding: 12px 16px;
+      border: 2px solid #e1e5e9;
+      border-radius: 8px;
       font-size: 16px;
-      color: var(--text-primary);
-      transition: all 0.3s ease;
+      transition: border-color 0.3s ease;
       font-family: inherit;
-    }
-
-    .form-group input::placeholder,
-    .form-group textarea::placeholder {
-      color: var(--text-secondary);
     }
 
     .form-group input:focus,
     .form-group textarea:focus,
     .form-group select:focus {
       outline: none;
-      border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
     .form-group textarea {
-      min-height: 180px;
+      min-height: 150px;
       resize: vertical;
-      line-height: 1.6;
     }
 
-    /* Grid layouts */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-
-    /* File upload */
     .file-upload {
       position: relative;
+      display: inline-block;
       cursor: pointer;
+      width: 100%;
     }
 
     .file-upload input[type=file] {
@@ -233,94 +101,39 @@
       cursor: pointer;
     }
 
-    .file-upload-area {
-      border: 2px dashed var(--border);
-      border-radius: 16px;
-      padding: 2rem;
+    .file-upload-label {
+      display: block;
+      padding: 12px 16px;
+      background: #f8f9fa;
+      border: 2px dashed #dee2e6;
+      border-radius: 8px;
       text-align: center;
       transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
     }
 
-    .file-upload:hover .file-upload-area,
-    .file-upload.dragover .file-upload-area {
-      border-color: var(--accent);
-      background: rgba(99, 102, 241, 0.05);
-      transform: translateY(-2px);
+    .file-upload:hover .file-upload-label {
+      border-color: #667eea;
+      background: #f0f4ff;
     }
 
-    .upload-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-      color: white;
-      font-size: 20px;
-    }
-
-    .upload-text {
-      font-size: 1.1rem;
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-
-    .upload-subtext {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
-
-    .filename-display {
-      margin-top: 1rem;
-      padding: 0.75rem;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      border-radius: 8px;
-      color: var(--success);
-      font-size: 0.9rem;
-      display: none;
-    }
-
-    /* Buttons */
     .submit-btn {
       width: 100%;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
-      padding: 1.25rem 2rem;
+      padding: 16px 24px;
       font-size: 1.1rem;
       font-weight: 600;
-      border-radius: 16px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      margin-top: 2rem;
-      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
-    }
-
-    .submit-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .submit-btn:hover::before {
-      left: 100%;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-top: 20px;
     }
 
     .submit-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
     }
 
     .submit-btn:disabled {
@@ -330,724 +143,159 @@
       box-shadow: none;
     }
 
-    .submit-btn:disabled::before {
-      display: none;
-    }
-
-    /* Status messages */
     .status {
-      margin-top: 2rem;
-      padding: 1.25rem 1.5rem;
-      border-radius: 16px;
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 8px;
       text-align: center;
       font-weight: 500;
       display: none;
-      backdrop-filter: blur(20px);
-      border: 1px solid;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .status::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      animation: pulse 2s ease-in-out infinite;
     }
 
     .status.success {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--success);
-      border-color: rgba(16, 185, 129, 0.2);
-    }
-
-    .status.success::before {
-      background: var(--success);
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
     }
 
     .status.error {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--error);
-      border-color: rgba(239, 68, 68, 0.2);
-    }
-
-    .status.error::before {
-      background: var(--error);
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
     }
 
     .status.loading {
-      background: rgba(245, 158, 11, 0.1);
-      color: var(--warning);
-      border-color: rgba(245, 158, 11, 0.2);
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
     }
 
-    .status.loading::before {
-      background: var(--warning);
-      animation: loading-bar 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
-    }
-
-    @keyframes loading-bar {
-      0% { transform: translateX(-100%); }
-      50% { transform: translateX(0); }
-      100% { transform: translateX(100%); }
-    }
-
-    /* Floating particles effect */
-    .particle {
-      position: absolute;
-      background: var(--accent);
-      border-radius: 50%;
-      opacity: 0.1;
-      animation: float-particle 8s linear infinite;
-    }
-
-    @keyframes float-particle {
-      0% {
-        transform: translateY(100vh) translateX(0);
-        opacity: 0;
-      }
-      10% {
-        opacity: 0.1;
-      }
-      90% {
-        opacity: 0.1;
-      }
-      100% {
-        transform: translateY(-100px) translateX(100px);
-        opacity: 0;
-      }
-    }
-
-    /* Features grid */
-    .features {
+    .row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
 
-    .feature-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(99, 102, 241, 0.3);
-      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
-    }
-
-    .feature-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-      color: white;
-      font-size: 20px;
-    }
-
-    .feature-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--text-primary);
-    }
-
-    .feature-desc {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-
-    /* Progress steps */
-    .steps {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 3rem;
-      padding: 0 2rem;
-    }
-
-    .step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      flex: 1;
-    }
-
-    .step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 20px;
-      left: 60%;
-      width: 80%;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      opacity: 0.3;
-    }
-
-    .step-number {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
-    }
-
-    .step-label {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      text-align: center;
-      line-height: 1.4;
-    }
-
-    /* Form styling */
-    .main-form {
-      background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 3rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .main-form::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0.7;
-    }
-
-    .form-section {
-      margin-bottom: 2.5rem;
-    }
-
-    .section-title {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .section-icon {
-      width: 24px;
-      height: 24px;
-      background: var(--accent);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 12px;
-    }
-
-    /* Enhanced input styling */
-    .input-wrapper {
-      position: relative;
-    }
-
-    .input-wrapper input,
-    .input-wrapper textarea,
-    .input-wrapper select {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-      font-size: 16px;
-      color: var(--text-primary);
-      width: 100%;
-      transition: all 0.3s ease;
-    }
-
-    .input-wrapper input:focus,
-    .input-wrapper textarea:focus,
-    .input-wrapper select:focus {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-    }
-
-    .input-wrapper::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: var(--accent);
-      transition: width 0.3s ease;
-    }
-
-    .input-wrapper:focus-within::after {
-      width: 100%;
-    }
-
-    /* Advanced file upload */
-    .file-drop-zone {
-      border: 2px dashed var(--border);
-      border-radius: 16px;
-      padding: 3rem 2rem;
-      text-align: center;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.02);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .file-drop-zone:hover,
-    .file-drop-zone.dragover {
-      border-color: var(--accent);
-      background: rgba(99, 102, 241, 0.05);
-      transform: scale(1.02);
-    }
-
-    .file-drop-zone::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, transparent 40%, rgba(99, 102, 241, 0.1) 50%, transparent 60%);
-      transform: translateX(-100%);
-      transition: transform 0.6s ease;
-    }
-
-    .file-drop-zone:hover::before {
-      transform: translateX(100%);
-    }
-
-    .upload-icon-large {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-      color: white;
-      font-size: 24px;
-      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
-    }
-
-    .file-status {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      border-radius: 12px;
-      color: var(--success);
-      display: none;
-      animation: slideIn 0.3s ease;
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Loading animation */
-    .loading-spinner {
-      display: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid transparent;
-      border-top: 2px solid currentColor;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-right: 0.5rem;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    /* Responsive design */
     @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
+      .row {
+        grid-template-columns: 1fr;
       }
       
       .header h1 {
-        font-size: 2.5rem;
+        font-size: 2rem;
       }
       
-      .main-form {
-        padding: 2rem 1.5rem;
-      }
-      
-      .two-col {
-        grid-template-columns: 1fr;
-      }
-      
-      .steps {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 0;
-      }
-      
-      .step:not(:last-child)::after {
-        display: none;
-      }
-      
-      .features {
-        grid-template-columns: 1fr;
+      .form-container {
+        padding: 30px;
       }
     }
 
-    /* Accessibility */
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    /* Enhanced focus styles for accessibility */
-    .submit-btn:focus-visible,
-    input:focus-visible,
-    textarea:focus-visible,
-    select:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
+    .filename-display {
+      margin-top: 8px;
+      color: #667eea;
+      font-size: 0.9rem;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
-  <div class="bg-animation"></div>
-  
-  <!-- Floating particles -->
-  <div class="particle" style="width: 4px; height: 4px; left: 10%; animation-delay: 0s;"></div>
-  <div class="particle" style="width: 6px; height: 6px; left: 20%; animation-delay: 2s;"></div>
-  <div class="particle" style="width: 3px; height: 3px; left: 30%; animation-delay: 4s;"></div>
-  <div class="particle" style="width: 5px; height: 5px; left: 70%; animation-delay: 1s;"></div>
-  <div class="particle" style="width: 4px; height: 4px; left: 80%; animation-delay: 3s;"></div>
-  <div class="particle" style="width: 3px; height: 3px; left: 90%; animation-delay: 5s;"></div>
-
   <div class="container">
-    <!-- Header -->
-    <header class="header">
-      <div class="logo">
-        <div class="logo-icon">
-          <i class="fas fa-magic"></i>
-        </div>
-      </div>
-      <h1>PresentAI</h1>
-      <p>Transform your ideas into stunning presentations with AI-powered automation</p>
-    </header>
+    <div class="header">
+      <h1>✨ Text to PowerPoint</h1>
+      <p>Transform your text into beautiful presentations</p>
+    </div>
 
-    <!-- Features showcase -->
-    <section class="features">
-      <div class="feature-card">
-        <div class="feature-icon">
-          <i class="fas fa-brain"></i>
-        </div>
-        <div class="feature-title">AI-Powered</div>
-        <div class="feature-desc">Smart content analysis and slide generation</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">
-          <i class="fas fa-palette"></i>
-        </div>
-        <div class="feature-title">Style Preservation</div>
-        <div class="feature-desc">Maintains your template's look and feel</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">
-          <i class="fas fa-lightning-bolt"></i>
-        </div>
-        <div class="feature-title">Lightning Fast</div>
-        <div class="feature-desc">Generate presentations in seconds</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">
-          <i class="fas fa-download"></i>
-        </div>
-        <div class="feature-title">Ready to Use</div>
-        <div class="feature-desc">Download as standard PowerPoint files</div>
-      </div>
-    </section>
-
-    <!-- Process steps -->
-    <section class="steps">
-      <div class="step">
-        <div class="step-number">1</div>
-        <div class="step-label">Add Your Text</div>
-      </div>
-      <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-label">Configure AI</div>
-      </div>
-      <div class="step">
-        <div class="step-number">3</div>
-        <div class="step-label">Upload Template</div>
-      </div>
-      <div class="step">
-        <div class="step-number">4</div>
-        <div class="step-label">Generate & Download</div>
-      </div>
-    </section>
-
-    <!-- Main form -->
-    <main class="main-form">
+    <div class="form-container">
       <form id="pptForm">
-        <!-- Content Section -->
-        <div class="form-section">
-          <div class="section-title">
-            <div class="section-icon">
-              <i class="fas fa-file-text"></i>
-            </div>
-            Content Input
-          </div>
-          
+        <div class="form-group">
+          <label for="textInput">Your Text Content:</label>
+          <textarea 
+            id="textInput" 
+            name="textInput" 
+            placeholder="Paste your text, markdown, or prose here. This will be automatically converted into slide content..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="guidance">Guidance (Optional):</label>
+          <input 
+            type="text" 
+            id="guidance" 
+            name="guidance" 
+            placeholder="e.g., 'turn into an investor pitch deck', 'make it technical', 'focus on key points'"
+          />
+        </div>
+
+        <div class="row">
           <div class="form-group">
-            <label for="textInput">Your Text Content</label>
-            <div class="input-wrapper">
-              <textarea 
-                id="textInput" 
-                name="textInput" 
-                placeholder="Paste your text, markdown, or prose here. Our AI will intelligently break it down into engaging slides..."
-                required
-              ></textarea>
-            </div>
+            <label for="llmProvider">LLM Provider:</label>
+            <select id="llmProvider" name="llmProvider" required>
+              <option value="">Select Provider</option>
+              <option value="openai">OpenAI (GPT)</option>
+              <option value="anthropic">Anthropic (Claude)</option>
+              <option value="gemini">Google (Gemini)</option>
+            </select>
           </div>
 
           <div class="form-group">
-            <label for="guidance">Style Guidance <span style="color: var(--text-secondary);">(Optional)</span></label>
-            <div class="input-wrapper">
-              <input 
-                type="text" 
-                id="guidance" 
-                name="guidance" 
-                placeholder="e.g., 'investor pitch deck', 'technical presentation', 'educational slides'"
-              />
-            </div>
+            <label for="apiKey">Your API Key:</label>
+            <input 
+              type="password" 
+              id="apiKey" 
+              name="apiKey" 
+              placeholder="Your LLM API key (not stored)"
+              required
+            />
           </div>
         </div>
 
-        <!-- AI Configuration -->
-        <div class="form-section">
-          <div class="section-title">
-            <div class="section-icon">
-              <i class="fas fa-robot"></i>
-            </div>
-            AI Configuration
+        <div class="form-group">
+          <label for="templateFile">PowerPoint Template (Optional):</label>
+          <div class="file-upload">
+            <input type="file" id="templateFile" name="templateFile" accept=".pptx,.potx">
+            <label for="templateFile" class="file-upload-label">
+              <span id="fileLabel">📎 Choose template file (.pptx or .potx)</span>
+            </label>
           </div>
-          
-          <div class="two-col">
-            <div class="form-group">
-              <label for="llmProvider">AI Provider</label>
-              <div class="input-wrapper">
-                <select id="llmProvider" name="llmProvider" required>
-                  <option value="">Choose your AI provider</option>
-                  <option value="openai">OpenAI (GPT-4)</option>
-                  <option value="anthropic">Anthropic (Claude)</option>
-                  <option value="gemini">Google (Gemini Pro)</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="apiKey">API Key</label>
-              <div class="input-wrapper">
-                <input 
-                  type="password" 
-                  id="apiKey" 
-                  name="apiKey" 
-                  placeholder="Your API key (never stored)"
-                  required
-                />
-              </div>
-            </div>
-          </div>
+          <div id="fileNameDisplay" class="filename-display"></div>
         </div>
 
-        <!-- Template Upload -->
-        <div class="form-section">
-          <div class="section-title">
-            <div class="section-icon">
-              <i class="fas fa-upload"></i>
-            </div>
-            Template Upload <span style="color: var(--text-secondary); font-weight: 400;">(Optional)</span>
-          </div>
-          
-          <div class="form-group">
-            <div class="file-upload">
-              <input type="file" id="templateFile" name="templateFile" accept=".pptx,.potx">
-              <div class="file-drop-zone">
-                <div class="upload-icon-large">
-                  <i class="fas fa-cloud-upload-alt"></i>
-                </div>
-                <div class="upload-text">Drop your PowerPoint template here</div>
-                <div class="upload-subtext">or click to browse (.pptx, .potx files)</div>
-              </div>
-            </div>
-            <div id="fileNameDisplay" class="file-status">
-              <i class="fas fa-check-circle"></i>
-              <span></span>
-            </div>
-          </div>
+        <div class="form-group">
+          <label for="filename">Output Filename:</label>
+          <input 
+            type="text" 
+            id="filename" 
+            name="filename" 
+            placeholder="my-presentation"
+            required
+          />
         </div>
 
-        <!-- Output Settings -->
-        <div class="form-section">
-          <div class="section-title">
-            <div class="section-icon">
-              <i class="fas fa-cog"></i>
-            </div>
-            Output Settings
-          </div>
-          
-          <div class="form-group">
-            <label for="filename">Filename</label>
-            <div class="input-wrapper">
-              <input 
-                type="text" 
-                id="filename" 
-                name="filename" 
-                placeholder="my-awesome-presentation"
-                required
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- Generate Button -->
-        <button type="submit" class="submit-btn">
-          <span class="loading-spinner"></span>
-          <i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>
-          <span class="btn-text">Generate Presentation</span>
-        </button>
+        <button type="submit" class="submit-btn">🚀 Generate Presentation</button>
       </form>
 
-      <!-- Status Display -->
       <div id="status" class="status"></div>
-    </main>
+    </div>
   </div>
 
   <script>
-    // Enhanced file upload with drag and drop
-    const fileInput = document.getElementById('templateFile');
-    const fileDropZone = document.querySelector('.file-drop-zone');
-    const fileStatus = document.getElementById('fileNameDisplay');
-    const uploadIconLarge = document.querySelector('.upload-icon-large');
-
-    // Drag and drop handlers
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      fileDropZone.addEventListener(eventName, preventDefaults, false);
-    });
-
-    function preventDefaults(e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-      fileDropZone.addEventListener(eventName, highlight, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-      fileDropZone.addEventListener(eventName, unhighlight, false);
-    });
-
-    function highlight(e) {
-      fileDropZone.classList.add('dragover');
-    }
-
-    function unhighlight(e) {
-      fileDropZone.classList.remove('dragover');
-    }
-
-    fileDropZone.addEventListener('drop', handleDrop, false);
-
-    function handleDrop(e) {
-      const dt = e.dataTransfer;
-      const files = dt.files;
-      
-      if (files.length > 0) {
-        fileInput.files = files;
-        updateFileDisplay(files[0]);
-      }
-    }
-
-    // File input change handler
-    fileInput.addEventListener('change', function(e) {
+    // File upload handling
+    document.getElementById('templateFile').addEventListener('change', function(e) {
       const file = e.target.files[0];
+      const fileLabel = document.getElementById('fileLabel');
+      const fileNameDisplay = document.getElementById('fileNameDisplay');
+      
       if (file) {
-        updateFileDisplay(file);
+        fileLabel.textContent = `✅ ${file.name}`;
+        fileNameDisplay.textContent = `Selected: ${file.name}`;
       } else {
-        resetFileDisplay();
+        fileLabel.textContent = '📎 Choose template file (.pptx or .potx)';
+        fileNameDisplay.textContent = '';
       }
     });
 
-    function updateFileDisplay(file) {
-      uploadIconLarge.innerHTML = '<i class="fas fa-check"></i>';
-      fileDropZone.querySelector('.upload-text').textContent = 'Template uploaded successfully!';
-      fileDropZone.querySelector('.upload-subtext').textContent = file.name;
-      
-      fileStatus.style.display = 'block';
-      fileStatus.querySelector('span').textContent = `${file.name} (${formatFileSize(file.size)})`;
-      
-      // Add success styling
-      fileDropZone.style.borderColor = 'var(--success)';
-      fileDropZone.style.background = 'rgba(16, 185, 129, 0.05)';
-    }
-
-    function resetFileDisplay() {
-      uploadIconLarge.innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
-      fileDropZone.querySelector('.upload-text').textContent = 'Drop your PowerPoint template here';
-      fileDropZone.querySelector('.upload-subtext').textContent = 'or click to browse (.pptx, .potx files)';
-      
-      fileStatus.style.display = 'none';
-      
-      // Reset styling
-      fileDropZone.style.borderColor = '';
-      fileDropZone.style.background = '';
-    }
-
-    function formatFileSize(bytes) {
-      if (bytes === 0) return '0 Bytes';
-      const k = 1024;
-      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
-    // Enhanced form submission with better UX
+    // Form submission
     document.getElementById("pptForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       
@@ -1072,20 +320,13 @@
 
       const statusDiv = document.getElementById("status");
       const submitBtn = document.querySelector('.submit-btn');
-      const btnText = document.querySelector('.btn-text');
-      const spinner = document.querySelector('.loading-spinner');
       
-      // Show loading state with enhanced animation
+      // Show loading state
       statusDiv.className = "status loading";
       statusDiv.style.display = "block";
-      statusDiv.innerHTML = `
-        <i class="fas fa-cog fa-spin" style="margin-right: 0.5rem;"></i>
-        Analyzing your content and generating slides...
-      `;
-      
+      statusDiv.textContent = "🔄 Generating your presentation...";
       submitBtn.disabled = true;
-      spinner.style.display = 'inline-block';
-      btnText.textContent = "Generating Magic...";
+      submitBtn.textContent = "Generating...";
 
       try {
         const response = await fetch("https://ppt-generator-api.onrender.com/generate-ppt", {
@@ -1098,12 +339,6 @@
           throw new Error(errorData.detail || "Error generating presentation");
         }
 
-        // Update status for download
-        statusDiv.innerHTML = `
-          <i class="fas fa-download" style="margin-right: 0.5rem;"></i>
-          Preparing your download...
-        `;
-
         // Download the file
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
@@ -1115,174 +350,17 @@
         a.remove();
         window.URL.revokeObjectURL(url);
 
-        // Show success with celebration
+        // Show success
         statusDiv.className = "status success";
-        statusDiv.innerHTML = `
-          <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i>
-          🎉 Success! Your presentation is downloading now.
-        `;
-        
-        // Add some celebration particles
-        createCelebrationEffect();
+        statusDiv.textContent = "✅ Download complete! Check your downloads folder.";
         
       } catch (err) {
         statusDiv.className = "status error";
-        statusDiv.innerHTML = `
-          <i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>
-          Error: ${err.message}
-        `;
+        statusDiv.textContent = `❌ Error: ${err.message}`;
       } finally {
         submitBtn.disabled = false;
-        spinner.style.display = 'none';
-        btnText.textContent = "Generate Presentation";
+        submitBtn.textContent = "🚀 Generate Presentation";
       }
-    });
-
-    // Celebration effect
-    function createCelebrationEffect() {
-      for (let i = 0; i < 20; i++) {
-        setTimeout(() => {
-          const particle = document.createElement('div');
-          particle.style.position = 'fixed';
-          particle.style.left = Math.random() * 100 + 'vw';
-          particle.style.top = '100vh';
-          particle.style.width = Math.random() * 8 + 4 + 'px';
-          particle.style.height = particle.style.width;
-          particle.style.background = `hsl(${Math.random() * 60 + 300}, 70%, 60%)`;
-          particle.style.borderRadius = '50%';
-          particle.style.pointerEvents = 'none';
-          particle.style.zIndex = '1000';
-          particle.style.animation = 'float-particle 3s ease-out forwards';
-          
-          document.body.appendChild(particle);
-          
-          setTimeout(() => {
-            particle.remove();
-          }, 3000);
-        }, i * 100);
-      }
-    }
-
-    // Enhanced input interactions
-    document.querySelectorAll('input, textarea, select').forEach(input => {
-      input.addEventListener('focus', function() {
-        this.closest('.input-wrapper').style.transform = 'scale(1.02)';
-      });
-      
-      input.addEventListener('blur', function() {
-        this.closest('.input-wrapper').style.transform = 'scale(1)';
-      });
-    });
-
-    // Auto-resize textarea
-    const textarea = document.getElementById('textInput');
-    textarea.addEventListener('input', function() {
-      this.style.height = 'auto';
-      this.style.height = Math.min(this.scrollHeight, 400) + 'px';
-    });
-
-    // API key security indicator
-    const apiKeyInput = document.getElementById('apiKey');
-    apiKeyInput.addEventListener('input', function() {
-      if (this.value.length > 0) {
-        this.style.background = 'rgba(16, 185, 129, 0.05)';
-        this.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-      } else {
-        this.style.background = '';
-        this.style.borderColor = '';
-      }
-    });
-
-    // Provider selection enhancement
-    const providerSelect = document.getElementById('llmProvider');
-    providerSelect.addEventListener('change', function() {
-      if (this.value) {
-        const providerInfo = {
-          'openai': 'Using OpenAI GPT-4 for content generation',
-          'anthropic': 'Using Anthropic Claude for content generation', 
-          'gemini': 'Using Google Gemini Pro for content generation'
-        };
-        
-        // You could add a small info tooltip here
-        console.log(providerInfo[this.value]);
-      }
-    });
-
-    // Form validation enhancement
-    function validateForm() {
-      const requiredFields = ['textInput', 'llmProvider', 'apiKey', 'filename'];
-      let isValid = true;
-      
-      requiredFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (!field.value.trim()) {
-          field.style.borderColor = 'var(--error)';
-          isValid = false;
-        } else {
-          field.style.borderColor = '';
-        }
-      });
-      
-      return isValid;
-    }
-
-    // Real-time validation
-    document.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
-      field.addEventListener('blur', function() {
-        if (!this.value.trim()) {
-          this.style.borderColor = 'var(--error)';
-        } else {
-          this.style.borderColor = 'var(--success)';
-        }
-      });
-      
-      field.addEventListener('input', function() {
-        if (this.value.trim()) {
-          this.style.borderColor = '';
-        }
-      });
-    });
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey || e.metaKey) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          if (validateForm()) {
-            document.getElementById('pptForm').dispatchEvent(new Event('submit'));
-          }
-        }
-      }
-    });
-
-    // Add subtle hover effects to cards
-    document.querySelectorAll('.feature-card').forEach(card => {
-      card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-8px) scale(1.02)';
-      });
-      
-      card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-      });
-    });
-
-    // Initialize tooltips and help text
-    document.addEventListener('DOMContentLoaded', function() {
-      // Add subtle animation delays to cards
-      document.querySelectorAll('.feature-card').forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
-        card.style.animation = 'slideIn 0.6s ease-out forwards';
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-      });
-      
-      // Animate form sections
-      document.querySelectorAll('.form-section').forEach((section, index) => {
-        section.style.animationDelay = `${index * 0.2}s`;
-        section.style.animation = 'slideIn 0.8s ease-out forwards';
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(30px)';
-      });
     });
   </script>
 </body>
