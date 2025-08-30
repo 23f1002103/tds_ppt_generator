@@ -901,9 +901,14 @@ The AI will automatically structure this into professional slides."
   </div>
 
   <script>
+    // Global variables
+    let isSubmitting = false;
+
     // Create floating background elements
     function createFloatingElements() {
       const container = document.getElementById('floatingElements');
+      if (!container) return;
+      
       for (let i = 0; i < 50; i++) {
         const element = document.createElement('div');
         element.className = 'floating-element';
@@ -918,6 +923,9 @@ The AI will automatically structure this into professional slides."
     function updateCharCounter() {
       const textarea = document.getElementById('textInput');
       const counter = document.getElementById('charCounter');
+      
+      if (!textarea || !counter) return;
+      
       const count = textarea.value.length;
       counter.textContent = `${count.toLocaleString()} characters`;
       
