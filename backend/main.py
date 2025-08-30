@@ -1,30 +1,16 @@
-# api/main.py
+# main.py
 
-from fastapi import FastAPI, HTTPException, File, UploadFile, Form
+from fastapi import FastAPI, HTTPException, File, UploadFile, Form, BackgroundTasks
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import shutil
 import tempfile
 from typing import Optional
-import sys
-import json
 
-# Add the backend directory to Python path to import core modules
-# Change the sys.path line to:
-backend_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'backend')
-sys.path.append(backend_path)
+from core.llm_handler import generate_slide_content
+from core.generator import create_ppt_from_template
 
-try:
-    from core.llm_handler import generate_slide_content
-    from core.generator import create_ppt_from_template
-except ImportError as e:
-    print(f"Import error: {e}")
-    print(f"Backend path: {backend_path}")
-    print(f"Current working directory: {os.getcwd()}")
-    print(f"Python path: {sys.path}")
-    # Don't raise here, let it fail at runtime so we can see the error
-    
 app = FastAPI(title="Text to PowerPoint Generator")
 
 app.add_middleware(
@@ -35,8 +21,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def cleanup_directory(path: str):
+    """Function to remove a directory and its contents."""
+    print(f"Cleaning up temporary directory: {path}")
+    shutil.rmtree(path)
+
 @app.post("/generate-ppt")
 async def generate_ppt(
+    background_tasks: BackgroundTasks, # Add this dependency
     text_content: str = Form(...),
     guidance: str = Form(""),
     llm_provider: str = Form(...),
@@ -44,6 +36,7 @@ async def generate_ppt(
     filename: str = Form(...),
     template_file: Optional[UploadFile] = File(None)
 ):
+    # Create a temporary directory without a 'with' block
     temp_dir = tempfile.mkdtemp()
     
     try:
@@ -74,7 +67,10 @@ async def generate_ppt(
             template_path=template_path
         )
         
-        # 3. Return the file response
+        # 3. Add the cleanup task to run AFTER the response is sent
+        background_tasks.add_task(cleanup_directory, temp_dir)
+
+        # 4. Return the response. The file will exist until the download is complete.
         return FileResponse(
             path=output_path,
             media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation",
@@ -82,20 +78,15 @@ async def generate_ppt(
         )
         
     except Exception as e:
-        # Clean up on error
-        shutil.rmtree(temp_dir, ignore_errors=True)
+        # If an error occurs, still clean up the directory
+        cleanup_directory(temp_dir)
         print("=== Exception in /generate-ppt ===")
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    
+# Add this to main.py
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the PowerPoint Generator API! This endpoint is working on Vercel."}
-
-@app.get("/health")
-def health_check():
-    return {"status": "healthy", "platform": "vercel"}
-
-# Export the app for Vercel - this is what Vercel will use
-app = app
+    return {"message": "Welcome to the PowerPoint Generator API! This endpoint is working."}
