@@ -1,11 +1,11 @@
-# ✨ Your Text, Your Style – AI PowerPoint Generator
+#  Your Text, Your Style – AI PowerPoint Generator
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An intelligent web application that transforms raw text, prose, or markdown into a fully formatted PowerPoint presentation using the design and style of any user-provided template.
 
 ---
-## 🚀 Live Demo
+##  Live Demo
 
 You can try the live application here: **[YOUR_DEPLOYED_APP_LINK_HERE]**
 
@@ -73,3 +73,18 @@ Open your web browser and go to `http://localhost:3000` to use the application.
 ## 📝 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+
+
+---
+## 🧠 How It Works
+
+This application transforms unstructured text into a styled presentation through a sophisticated two-step process: intelligent content structuring by a Large Language Model (LLM) and precise style application using a backend engine.
+
+### 1. Text Parsing and Slide Mapping
+
+First, the user's raw text input and one-line guidance are sent to the selected LLM (Gemini, OpenAI, or Anthropic). The core of the prompt instructs the model to act as a presentation expert, analyzing the entire text to identify key themes, titles, and hierarchical points. It is specifically asked to return a structured JSON object, typically an array of slides, where each slide has a `title` and a `content` field (often an array of bullet points). The user's guidance heavily influences this process; for example, a request for an "investor pitch" will result in a more concise, impactful structure compared to a "technical summary." This ensures the slide breakdown is not arbitrary but contextually relevant to the user's goal.
+
+### 2. Template Style and Asset Application
+
+Once the structured JSON is received, the backend engine, powered by the `python-pptx` library, takes over. The user's uploaded template file (`.pptx` or `.potx`) is opened and analyzed. The engine inspects the template's **Slide Master** and its various **Slide Layouts** (e.g., 'Title Slide', 'Title and Content', 'Section Header'). It then intelligently iterates through the JSON data from the LLM, matching each slide's content to the most appropriate layout. For instance, a slide with a title and a list of bullet points is mapped to the 'Title and Content' layout. By doing this, the new presentation automatically inherits all the design elements from the template: fonts, color schemes, logos, backgrounds, and even placeholder image positions, ensuring the final output perfectly matches the user's desired style.
