@@ -7,7 +7,7 @@ An intelligent web application that transforms raw text, prose, or markdown into
 ---
 ##  Live Demo
 
-You can try the live application here: **[YOUR_DEPLOYED_APP_LINK_HERE]**
+You can try the live application here: https://spectacular-truffle-324cd7.netlify.app/
 
 ---
 
